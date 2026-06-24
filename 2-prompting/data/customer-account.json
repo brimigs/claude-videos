@@ -1,0 +1,20 @@
+{
+  "customer_id": "CUST-8821",
+  "name": "Jordan Lee",
+  "email": "jordan.lee@example.com",
+  "plan": "Professional",
+  "monthly_rate": 79.00,
+  "billing_date": 15,
+  "status": "active",
+  "last_invoice": {
+    "invoice_id": "INV-20260615",
+    "date": "2026-06-15",
+    "amount_charged": 158.00,
+    "line_items": [
+      { "description": "Professional Plan — June 2026", "amount": 79.00 },
+      { "description": "Professional Plan — June 2026", "amount": 79.00 }
+    ]
+  },
+  "payment_method": "Visa ending 4242",
+  "open_tickets": []
+}

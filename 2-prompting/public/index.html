@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Prompt Engineering Demos — Video 2 of 7</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:           #0d1117;
+      --surface:      #161b22;
+      --raised:       #21262d;
+      --border:       #30363d;
+      --text:         #e6edf3;
+      --muted:        #8b949e;
+      --subtle:       #6e7681;
+      --red:          #f85149;
+      --red-bg:       rgba(248, 81, 73, 0.12);
+      --red-border:   rgba(248, 81, 73, 0.4);
+      --green:        #3fb950;
+      --green-bg:     rgba(63, 185, 80, 0.12);
+      --green-border: rgba(63, 185, 80, 0.4);
+      --yellow:       #e3b341;
+      --yellow-bg:    rgba(227, 179, 65, 0.12);
+      --blue:         #58a6ff;
+      --accent:       #1f6feb;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* ── Header ─────────────────────────────────────────────────────── */
+    .app-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      height: 52px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .app-header h1 { font-size: 15px; font-weight: 600; }
+    .badge {
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--raised);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 2px 10px;
+    }
+
+    /* ── Tabs ────────────────────────────────────────────────────────── */
+    .tabs {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 28px;
+      display: flex;
+    }
+    .tab {
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 11px 14px;
+      transition: color .15s, border-color .15s;
+    }
+    .tab:hover  { color: var(--text); }
+    .tab.active { color: var(--text); border-bottom-color: var(--blue); }
+
+    /* ── Layout ──────────────────────────────────────────────────────── */
+    .main { max-width: 1440px; margin: 0 auto; padding: 24px 28px; }
+    .panel { display: none; }
+    .panel.active { display: block; }
+
+    .demo-header { margin-bottom: 20px; }
+    .demo-header h2 { font-size: 17px; font-weight: 600; margin-bottom: 4px; }
+    .demo-header p  { color: var(--muted); font-size: 13px; }
+
+    .side-by-side {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+
+    /* ── Cards ───────────────────────────────────────────────────────── */
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .card.bad  { border-color: var(--red-border); }
+    .card.good { border-color: var(--green-border); }
+
+    .card-head {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 9px 14px;
+      border-bottom: 1px solid var(--border);
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .02em;
+    }
+    .card.bad  .card-head { background: var(--red-bg);   color: var(--red);   border-bottom-color: var(--red-border); }
+    .card.good .card-head { background: var(--green-bg); color: var(--green); border-bottom-color: var(--green-border); }
+    .card-body { padding: 14px; }
+
+    /* ── Prompt code ─────────────────────────────────────────────────── */
+    .prompt-code {
+      font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+      font-size: 12.5px;
+      line-height: 1.75;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: var(--text);
+      max-height: 240px;
+      overflow-y: auto;
+    }
+
+    mark.hl-red    { background: var(--red-bg);    color: var(--red);    border-radius: 3px; }
+    mark.hl-green  { background: var(--green-bg);  color: var(--green);  border-radius: 3px; }
+    mark.hl-yellow { background: var(--yellow-bg); color: var(--yellow); border-radius: 3px; }
+
+    /* ── Input row ───────────────────────────────────────────────────── */
+    .input-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 14px;
+      align-items: flex-start;
+    }
+    .input-label {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 500;
+      white-space: nowrap;
+      padding-top: 9px;
+      min-width: 80px;
+    }
+    textarea.msg {
+      flex: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text);
+      font-family: inherit;
+      font-size: 13px;
+      padding: 8px 12px;
+      resize: vertical;
+      min-height: 56px;
+    }
+    textarea.msg:focus { outline: none; border-color: var(--blue); }
+
+    .run-btn {
+      background: var(--accent);
+      border: none;
+      border-radius: 6px;
+      color: #fff;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 8px 18px;
+      white-space: nowrap;
+      transition: opacity .15s;
+    }
+    .run-btn:hover    { opacity: .85; }
+    .run-btn:disabled { opacity: .4; cursor: default; }
+
+    /* ── Response text ───────────────────────────────────────────────── */
+    .resp-text {
+      font-size: 13.5px;
+      line-height: 1.75;
+      min-height: 72px;
+      color: var(--text);
+      white-space: pre-wrap;
+    }
+    .resp-text.empty { color: var(--subtle); font-style: italic; }
+
+    .cursor {
+      display: inline-block;
+      width: 2px;
+      height: 13px;
+      background: var(--blue);
+      vertical-align: text-bottom;
+      animation: blink 1s step-end infinite;
+    }
+    @keyframes blink { 50% { opacity: 0; } }
+
+    /* ── Patch audit ─────────────────────────────────────────────────── */
+    .patch-grid { display: grid; gap: 10px; }
+
+    .patch-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 13px 16px;
+    }
+    .patch-card.conflict { border-color: var(--red-border);   background: rgba(248,81,73,.04); }
+    .patch-card.stale    { border-color: rgba(227,179,65,.4); background: rgba(227,179,65,.04); }
+    .patch-card.ok       { border-color: var(--green-border); }
+
+    .patch-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 6px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    .patch-id { font-weight: 700; color: var(--text); font-family: monospace; font-size: 13px; }
+
+    .pill {
+      border-radius: 12px;
+      padding: 1px 9px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .pill.conflict { background: var(--red-bg);    color: var(--red); }
+    .pill.stale    { background: var(--yellow-bg); color: var(--yellow); }
+    .pill.ok       { background: var(--green-bg);  color: var(--green); }
+
+    .patch-desc { font-size: 12.5px; color: var(--muted); margin-bottom: 7px; }
+
+    .patch-instruction {
+      font-family: 'SFMono-Regular', Consolas, monospace;
+      font-size: 12.5px;
+      background: var(--raised);
+      border-left: 3px solid var(--border);
+      border-radius: 0 4px 4px 0;
+      padding: 7px 12px;
+      color: var(--text);
+    }
+    .patch-card.conflict .patch-instruction { border-left-color: var(--red); }
+    .patch-card.stale    .patch-instruction { border-left-color: var(--yellow); }
+    .patch-card.ok       .patch-instruction { border-left-color: var(--green); }
+
+    .patch-conflict-note {
+      font-size: 12px;
+      color: var(--red);
+      margin-top: 7px;
+    }
+    .patch-stale-note {
+      font-size: 12px;
+      color: var(--yellow);
+      margin-top: 7px;
+      padding: 6px 10px;
+      background: var(--yellow-bg);
+      border-radius: 4px;
+    }
+
+    /* ── Audit summary ───────────────────────────────────────────────── */
+    .audit-summary {
+      margin-top: 24px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 20px 24px;
+    }
+    .audit-summary h3 { font-size: 14px; font-weight: 600; margin-bottom: 16px; }
+
+    .audit-stats { display: flex; gap: 32px; margin-bottom: 18px; }
+    .stat { display: flex; align-items: baseline; gap: 7px; }
+    .stat .n { font-size: 22px; font-weight: 700; }
+    .stat .n.red    { color: var(--red); }
+    .stat .n.yellow { color: var(--yellow); }
+    .stat .label { font-size: 13px; color: var(--muted); }
+
+    .audit-actions { border-top: 1px solid var(--border); padding-top: 16px; }
+    .audit-actions h4 {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--subtle);
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 10px;
+    }
+    .action {
+      display: flex;
+      gap: 9px;
+      align-items: flex-start;
+      padding: 5px 0;
+      font-size: 13px;
+    }
+    .action .icon { flex-shrink: 0; font-size: 13px; }
+    .action.danger .icon { color: var(--red); }
+    .action.warn   .icon { color: var(--yellow); }
+    .action.ok     .icon { color: var(--green); }
+
+    /* ── Scrollbars ──────────────────────────────────────────────────── */
+    ::-webkit-scrollbar             { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track       { background: var(--bg); }
+    ::-webkit-scrollbar-thumb       { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--subtle); }
+  </style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>Prompt Engineering Demos</h1>
+  <span class="badge">Video 2 of 7</span>
+</header>
+
+<nav class="tabs">
+  <button class="tab active" onclick="switchTab('t1', this)">① Prohibition vs Criterion</button>
+  <button class="tab"        onclick="switchTab('t2', this)">② Minimal Prompt</button>
+  <button class="tab"        onclick="switchTab('t3', this)">③ Patch Audit</button>
+</nav>
+
+<main class="main">
+
+  <!-- ── DEMO 1 ── -->
+  <section id="t1" class="panel active">
+    <div class="demo-header">
+      <h2>Parts 1 & 3 — Prohibition vs Decision Criterion</h2>
+      <p>The $8 escalation failure: a prohibition-only instruction vs the both-sides rule</p>
+    </div>
+
+    <div class="side-by-side">
+      <div class="card bad">
+        <div class="card-head"><span>✗</span> v0 — Prohibition Only</div>
+        <div class="card-body"><div class="prompt-code" id="p-broken">Loading…</div></div>
+      </div>
+      <div class="card good">
+        <div class="card-head"><span>✓</span> v1 — Both-Sides Rule</div>
+        <div class="card-body"><div class="prompt-code" id="p-fixed">Loading…</div></div>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <span class="input-label">Test message</span>
+      <textarea class="msg" id="msg1">I see a duplicate charge of $79 on my account this month. This is the second time this has happened — it's really frustrating.</textarea>
+      <button class="run-btn" id="btn1" onclick="runDemo(1)">▶ Run Both</button>
+    </div>
+
+    <div class="side-by-side">
+      <div class="card bad">
+        <div class="card-head"><span>✗</span> Response — v0 Broken</div>
+        <div class="card-body"><div class="resp-text empty" id="r1-left">Response will appear here…</div></div>
+      </div>
+      <div class="card good">
+        <div class="card-head"><span>✓</span> Response — v1 Fixed</div>
+        <div class="card-body"><div class="resp-text empty" id="r1-right">Response will appear here…</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEMO 2 ── -->
+  <section id="t2" class="panel">
+    <div class="demo-header">
+      <h2>Part 2 — The Minimal Prompt & Cleanup Pass</h2>
+      <p>Four elements and nothing else: role · data · task + definition of done · output shape</p>
+    </div>
+
+    <div class="side-by-side">
+      <div class="card bad">
+        <div class="card-head"><span>✗</span> v0 — Messy (unstructured, contradictory)</div>
+        <div class="card-body"><div class="prompt-code" id="p-messy">Loading…</div></div>
+      </div>
+      <div class="card good">
+        <div class="card-head"><span>✓</span> v1 — Clean (XML structure, 4 elements)</div>
+        <div class="card-body"><div class="prompt-code" id="p-clean">Loading…</div></div>
+      </div>
+    </div>
+
+    <div class="input-row">
+      <span class="input-label">Test message</span>
+      <textarea class="msg" id="msg2">My invoice shows $158 this month but I thought I was on a $79/month plan. Can you explain what happened?</textarea>
+      <button class="run-btn" id="btn2" onclick="runDemo(2)">▶ Run Both</button>
+    </div>
+
+    <div class="side-by-side">
+      <div class="card bad">
+        <div class="card-head"><span>✗</span> Response — v0 Messy</div>
+        <div class="card-body"><div class="resp-text empty" id="r2-left">Response will appear here…</div></div>
+      </div>
+      <div class="card good">
+        <div class="card-head"><span>✓</span> Response — v1 Clean</div>
+        <div class="card-body"><div class="resp-text empty" id="r2-right">Response will appear here…</div></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEMO 3 ── -->
+  <section id="t3" class="panel">
+    <div class="demo-header">
+      <h2>Part 4 — Defensive Patch Audit</h2>
+      <p>8 patches over 11 months — 2 conflicting pairs, 1 stale entry</p>
+    </div>
+    <div class="patch-grid" id="patch-grid">Loading…</div>
+    <div class="audit-summary" id="audit-summary" style="display:none"></div>
+  </section>
+
+</main>
+
+<script>
+  // ── Tab switching ─────────────────────────────────────────────────────────
+  function switchTab(id, btn) {
+    document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab').forEach(b => b.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // ── Safe HTML escape ──────────────────────────────────────────────────────
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  // Wrap substrings with <mark> after HTML-escaping both text and needle
+  function highlight(text, pairs) {
+    let html = esc(text);
+    for (const [raw, cls] of pairs) {
+      const needle = esc(raw);
+      html = html.split(needle).join(`<mark class="${cls}">${needle}</mark>`);
+    }
+    return html;
+  }
+
+  // ── Load data ─────────────────────────────────────────────────────────────
+  async function init() {
+    const { prompts, patchLog } = await fetch('/api/data').then(r => r.json());
+
+    document.getElementById('p-broken').innerHTML = highlight(prompts.broken, [
+      ['Avoid escalating to a specialist unless absolutely necessary — each escalation costs $8.', 'hl-red'],
+      ['Never give plan pricing unless you\'re certain.', 'hl-red'],
+      ['Always try to resolve the issue yourself before escalating.', 'hl-red'],
+    ]);
+
+    document.getElementById('p-fixed').innerHTML = highlight(prompts.fixed, [
+      ['Escalating costs $8 in agent time. A wrong answer on a billing\ndispute costs a full refund plus customer trust. Route any mention of an\nincorrect, duplicate, or unexpected charge to a Care Specialist by saying exactly:\n"I\'m connecting you with a Care Specialist who can resolve this directly."', 'hl-green'],
+    ]);
+
+    document.getElementById('p-messy').innerHTML = highlight(prompts.messy, [
+      ['Be concise but also thorough when needed.', 'hl-red'],
+      ['Don\'t be verbose.', 'hl-red'],
+      ['If they ask about pricing don\'t tell them unless you have the current price list from their account record.', 'hl-yellow'],
+    ]);
+
+    document.getElementById('p-clean').innerHTML = highlight(prompts.clean, [
+      ['<role>',    'hl-green'], ['</role>',    'hl-green'],
+      ['<data>',    'hl-green'], ['</data>',    'hl-green'],
+      ['<task>',    'hl-green'], ['</task>',    'hl-green'],
+      ['<reply>',   'hl-green'], ['</reply>',   'hl-green'],
+    ]);
+
+    renderPatches(patchLog);
+  }
+
+  // ── Patch audit ───────────────────────────────────────────────────────────
+  function renderPatches(log) {
+    const byId = Object.fromEntries(log.patches.map(p => [p.id, p]));
+
+    document.getElementById('patch-grid').innerHTML = log.patches.map(p => {
+      const isConflict = !!p.conflict_with;
+      const isStale    = !!p.note && !isConflict;
+      const cls  = isConflict ? 'conflict' : isStale ? 'stale' : 'ok';
+      const pill = isConflict
+        ? '<span class="pill conflict">CONFLICTS</span>'
+        : isStale
+          ? '<span class="pill stale">POSSIBLY STALE</span>'
+          : '<span class="pill ok">OK</span>';
+
+      const conflictNote = isConflict
+        ? `<div class="patch-conflict-note">↳ Conflicts with [${p.conflict_with}]: "${esc(byId[p.conflict_with]?.instruction ?? '')}"</div>`
+        : '';
+      const staleNote = isStale
+        ? `<div class="patch-stale-note">⚠ ${esc(p.note)}</div>`
+        : '';
+
+      return `<div class="patch-card ${cls}">
+        <div class="patch-meta">
+          <span class="patch-id">[${p.id}]</span>
+          <span>${p.date}</span>·<span>${p.added_by}</span>·<span>${p.incident}</span>
+          ${pill}
+        </div>
+        <div class="patch-desc">${esc(p.description)}</div>
+        <div class="patch-instruction">${esc(p.instruction)}</div>
+        ${conflictNote}${staleNote}
+      </div>`;
+    }).join('');
+
+    const conflicts  = log.patches.filter(p => p.conflict_with && log.patches.findIndex(x => x.id === p.conflict_with) > log.patches.findIndex(x => x.id === p.id)).length;
+    const stale      = log.patches.filter(p => p.note).length;
+    const alwayNever = log.patches.filter(p => /^(always|never)\b/i.test(p.instruction)).length;
+
+    const s = document.getElementById('audit-summary');
+    s.style.display = 'block';
+    s.innerHTML = `
+      <h3>Audit Summary — before the next model upgrade</h3>
+      <div class="audit-stats">
+        <div class="stat"><span class="n red">${conflicts}</span><span class="label">conflicting pairs</span></div>
+        <div class="stat"><span class="n yellow">${stale}</span><span class="label">possibly stale</span></div>
+        <div class="stat"><span class="n">${alwayNever} / ${log.patches.length}</span><span class="label">start with ALWAYS or NEVER</span></div>
+      </div>
+      <div class="audit-actions">
+        <h4>Recommended actions</h4>
+        <div class="action danger"><span class="icon">✗</span><span>Resolve [P003] vs [P004] — rewrite as one unified escalation criterion</span></div>
+        <div class="action danger"><span class="icon">✗</span><span>Resolve [P005] vs [P006] — rewrite as one empathy guideline</span></div>
+        <div class="action warn">  <span class="icon">⚠</span><span>Verify [P007] — data pipeline bug fixed 2026-02-20; test the prompt without it</span></div>
+        <div class="action ok">    <span class="icon">✓</span><span>Keep [P001], [P002], [P008] — clean, no conflicts</span></div>
+      </div>`;
+  }
+
+  // ── Live streaming demo ───────────────────────────────────────────────────
+  async function runDemo(n) {
+    const msg  = document.getElementById(`msg${n}`).value.trim();
+    const btn  = document.getElementById(`btn${n}`);
+    const lEl  = document.getElementById(`r${n}-left`);
+    const rEl  = document.getElementById(`r${n}-right`);
+    if (!msg) return;
+
+    btn.disabled = true;
+    btn.textContent = '⏳ Running…';
+    lEl.classList.remove('empty');
+    rEl.classList.remove('empty');
+    lEl.innerHTML = rEl.innerHTML = '<span class="cursor"></span>';
+
+    let lText = '', rText = '';
+
+    try {
+      const resp = await fetch('/api/stream', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify({ demo: n, message: msg }),
+      });
+
+      const reader  = resp.body.getReader();
+      const decoder = new TextDecoder();
+      let buf = '';
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        buf += decoder.decode(value, { stream: true });
+        const lines = buf.split('\n');
+        buf = lines.pop();
+        for (const line of lines) {
+          if (!line.startsWith('data: ')) continue;
+          let ev;
+          try { ev = JSON.parse(line.slice(6)); } catch { continue; }
+          if (ev.side === 'left') {
+            if (ev.text) { lText += ev.text; lEl.innerHTML = esc(lText) + (ev.done ? '' : '<span class="cursor"></span>'); }
+            if (ev.done) lEl.innerHTML = esc(lText);
+          } else if (ev.side === 'right') {
+            if (ev.text) { rText += ev.text; rEl.innerHTML = esc(rText) + (ev.done ? '' : '<span class="cursor"></span>'); }
+            if (ev.done) rEl.innerHTML = esc(rText);
+          }
+        }
+      }
+    } catch (e) {
+      lEl.textContent = rEl.textContent = `Error: ${e}`;
+    }
+
+    btn.disabled = false;
+    btn.textContent = '▶ Run Both';
+  }
+
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>TriageBoard</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="app-header">
+        <div class="brand">
+          <span class="brand-mark" aria-hidden="true">TB</span>
+          <div>
+            <h1>TriageBoard</h1>
+            <p>Production incident queue</p>
+          </div>
+        </div>
+        <div class="header-meta">
+          <span class="live-dot" aria-hidden="true"></span>
+          <span id="updatedAt">Loading</span>
+        </div>
+      </header>
+
+      <main>
+        <section class="toolbar" aria-label="Incident filters">
+          <label>
+            Team
+            <select id="teamFilter">
+              <option value="all">All teams</option>
+            </select>
+          </label>
+          <label>
+            Status
+            <select id="statusFilter">
+              <option value="all">All statuses</option>
+              <option value="active">Active</option>
+              <option value="investigating">Investigating</option>
+              <option value="watching">Watching</option>
+              <option value="mitigated">Mitigated</option>
+            </select>
+          </label>
+          <label class="search-label">
+            Search
+            <input id="searchInput" type="search" placeholder="Service, title, or team" />
+          </label>
+        </section>
+
+        <section id="summaryGrid" class="summary-grid" aria-label="Incident summary"></section>
+
+        <div class="content-grid">
+          <section class="queue-section" aria-labelledby="queueTitle">
+            <div class="section-heading">
+              <div>
+                <h2 id="queueTitle">Responder Queue</h2>
+                <p id="queueCount">Loading incidents</p>
+              </div>
+            </div>
+            <div id="incidentList" class="incident-list"></div>
+          </section>
+
+          <aside class="side-panel" aria-labelledby="mapTitle">
+            <h2 id="mapTitle">Service Map</h2>
+            <img class="topology-map" src="/assets/service-map.svg" alt="Service topology map" />
+            <div class="policy-list">
+              <h3>Escalation Policy</h3>
+              <ul>
+                <li>Outage impact moves directly to SEV1.</li>
+                <li>Breached SLA incidents stay above watch items.</li>
+                <li>Revenue risk breaks ties inside a severity band.</li>
+              </ul>
+            </div>
+          </aside>
+        </div>
+      </main>
+    </div>
+
+    <script type="module" src="/app.mjs"></script>
+  </body>
+</html>

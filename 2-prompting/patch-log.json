@@ -1,0 +1,79 @@
+{
+  "agent": "customer-support-v2",
+  "prompt_created": "2025-07-01",
+  "patches": [
+    {
+      "id": "P001",
+      "date": "2025-09-14",
+      "added_by": "sarah.chen",
+      "incident": "SUP-1042",
+      "description": "Agent revealed internal ticket IDs to customers",
+      "instruction": "Never mention internal ticket IDs or system reference numbers in responses.",
+      "conflict_with": null
+    },
+    {
+      "id": "P002",
+      "date": "2025-10-02",
+      "added_by": "mike.torres",
+      "incident": "SUP-1199",
+      "description": "Agent quoted outdated pricing from training data",
+      "instruction": "Never quote plan pricing from memory. Always direct pricing questions to myaccount.com.",
+      "conflict_with": null
+    },
+    {
+      "id": "P003",
+      "date": "2025-10-28",
+      "added_by": "lisa.park",
+      "incident": "SUP-1387",
+      "description": "Agent too slow to escalate visibly angry customers",
+      "instruction": "Always escalate immediately if the customer uses words like 'angry', 'frustrated', 'ridiculous', or 'unacceptable'.",
+      "conflict_with": "P004"
+    },
+    {
+      "id": "P004",
+      "date": "2025-11-15",
+      "added_by": "sarah.chen",
+      "incident": "SUP-1521",
+      "description": "Agent escalating too often, Q4 costs over budget",
+      "instruction": "Avoid unnecessary escalations — resolve most issues yourself before involving a specialist.",
+      "conflict_with": "P003"
+    },
+    {
+      "id": "P005",
+      "date": "2025-12-03",
+      "added_by": "content.team",
+      "incident": "SUP-1634",
+      "description": "Agent apologized excessively, felt hollow and scripted",
+      "instruction": "Never say 'I apologize' or 'I'm sorry' more than once per conversation.",
+      "conflict_with": "P006"
+    },
+    {
+      "id": "P006",
+      "date": "2026-01-18",
+      "added_by": "cx.team",
+      "incident": "SUP-1891",
+      "description": "CSAT survey: customers felt agent was cold and unhelpful",
+      "instruction": "Always acknowledge the customer's frustration with empathy before providing any solution.",
+      "conflict_with": "P005"
+    },
+    {
+      "id": "P007",
+      "date": "2026-02-07",
+      "added_by": "ops.team",
+      "incident": "SUP-2012",
+      "description": "Agent gave wrong refund amounts — data pipeline bug caused incorrect totals",
+      "instruction": "Never confirm or state specific refund amounts — always say the amount will be calculated by the billing team.",
+      "note": "Root cause was a data pipeline bug fixed on 2026-02-20 (deploy d8f3a1). Refund totals in account records are now accurate. This instruction may be stale.",
+      "conflict_with": null
+    },
+    {
+      "id": "P008",
+      "date": "2026-04-12",
+      "added_by": "product.team",
+      "incident": "SUP-2341",
+      "description": "Agent suggested discontinued Classic plan to customers asking about downgrades",
+      "instruction": "Never mention the Classic plan — it was discontinued in Q1 2026.",
+      "conflict_with": null
+    }
+  ]
+}

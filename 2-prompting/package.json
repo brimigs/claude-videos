@@ -1,0 +1,21 @@
+{
+  "name": "prompt-engineering-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "ui": "npx tsx src/server.ts",
+    "demo:01": "npx tsx src/01-prohibition-vs-criterion.ts",
+    "demo:02": "npx tsx src/02-minimal-prompt.ts",
+    "demo:03": "npx tsx src/03-patch-audit.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "@types/express": "^4.17.21",
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
