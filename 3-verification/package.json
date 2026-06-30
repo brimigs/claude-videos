@@ -1,0 +1,12 @@
+{
+  "name": "taskflow",
+  "version": "1.0.0",
+  "description": "Simple task manager — demo app for Claude Code verification loop video",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}

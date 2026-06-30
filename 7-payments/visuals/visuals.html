@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Agentic Payments — Visuals</title>
+<style>
+  :root {
+    --ink: #1a1d23;
+    --dim: #5b6270;
+    --line: #e3e6ea;
+    --accent: #2f6fed;
+    --code-bg: #f6f8fa;
+    --good-bg: #eefcf3;
+    --good-line: #b9e8c9;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: #fff;
+    color: var(--ink);
+    font-family: -apple-system, "Helvetica Neue", Arial, sans-serif;
+  }
+  .deck { max-width: 880px; margin: 0 auto; padding: 48px 32px 96px; }
+  .slide {
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 40px 44px;
+    margin-bottom: 40px;
+  }
+  .slide h2 {
+    margin: 0 0 6px;
+    font-size: 26px;
+  }
+  .slide .sub {
+    color: var(--dim);
+    margin: 0 0 28px;
+    font-size: 15px;
+  }
+  .flow {
+    font-family: "SF Mono", Menlo, Consolas, monospace;
+    font-size: 16px;
+    background: var(--code-bg);
+    border-radius: 8px;
+    padding: 24px 28px;
+  }
+  .flow .line { padding: 2px 0; }
+  .flow .arrow { color: var(--accent); text-align: center; padding: 4px 0; }
+  .panels { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  .panel { border: 1px solid var(--line); border-radius: 8px; padding: 20px 22px; }
+  .panel.good { background: var(--good-bg); border-color: var(--good-line); }
+  .panel h3 { margin: 0 0 14px; font-size: 15px; }
+  .panel .flow { font-size: 14px; padding: 16px 18px; background: transparent; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--line); }
+  th { color: var(--dim); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .03em; }
+  .note { margin-top: 24px; font-size: 14px; color: var(--dim); }
+  @media (max-width: 640px) { .panels { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="deck">
+
+  <div class="slide">
+    <h2>Agents that spend, not just act</h2>
+    <p class="sub">Same paywalled API, no x402 vs. x402</p>
+    <div class="panels">
+      <div class="panel">
+        <h3>Without x402</h3>
+        <div class="flow">
+          <div class="line">GET /api/v1/forecast</div>
+          <div class="arrow">↓</div>
+          <div class="line">402 Payment Required</div>
+          <div class="arrow">↓</div>
+          <div class="line">no way to pay → gives up</div>
+        </div>
+      </div>
+      <div class="panel good">
+        <h3>With x402</h3>
+        <div class="flow">
+          <div class="line">GET /api/v1/forecast</div>
+          <div class="arrow">↓</div>
+          <div class="line">402 — here's what it costs</div>
+          <div class="arrow">↓</div>
+          <div class="line">signs payment, retries</div>
+          <div class="arrow">↓</div>
+          <div class="line">200 OK + the resource</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="slide">
+    <h2>The x402 request/response flow</h2>
+    <p class="sub">No code, no account, no human</p>
+    <div class="flow">
+      <div class="line">Agent requests a resource</div>
+      <div class="arrow">↓</div>
+      <div class="line">Server replies: 402, here's what it costs</div>
+      <div class="arrow">↓</div>
+      <div class="line">Agent signs a payment</div>
+      <div class="arrow">↓</div>
+      <div class="line">Server verifies, settles, returns the resource</div>
+    </div>
+    <p class="note">Stateless — no session, no stored card, no API key sitting around waiting to leak.</p>
+  </div>
+
+  <div class="slide">
+    <h2>Solana Pay vs. x402</h2>
+    <p class="sub">The one people actually confuse</p>
+    <table>
+      <tr><th></th><th>Solana Pay</th><th>x402</th></tr>
+      <tr><td>Who's paying</td><td>A human, usually scanning a QR code</td><td>Software — an agent or another service</td></tr>
+      <tr><td>Where it lives</td><td>Point-of-sale, checkout flows</td><td>HTTP requests, API responses</td></tr>
+      <tr><td>What triggers it</td><td>A merchant request</td><td>An HTTP 402 status code</td></tr>
+      <tr><td>What it's for</td><td>Buying a coffee</td><td>An agent buying an API call</td></tr>
+    </table>
+  </div>
+
+  <div class="slide">
+    <h2>The protocol landscape</h2>
+    <p class="sub">Which one is for what</p>
+    <table>
+      <tr><th>Protocol</th><th>Built for</th></tr>
+      <tr><td>x402</td><td>One piece of software paying another for a discrete thing — API calls, data, compute</td></tr>
+      <tr><td>AP2</td><td>Agents proving identity and authorization to each other</td></tr>
+      <tr><td>ACP</td><td>Agentic shopping checkouts against merchant catalogs</td></tr>
+      <tr><td>MPP</td><td>Pre-authorized spending sessions, streamed continuously</td></tr>
+    </table>
+    <p class="note">Not really competitors — they overlap at the edges but solve different problems.</p>
+  </div>
+
+</div>
+</body>
+</html>

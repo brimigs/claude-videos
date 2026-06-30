@@ -1,0 +1,32 @@
+[
+  {
+    "id": "case-01",
+    "failure_type": "escalation_boundary",
+    "input": "There's a $79 charge on my account from June 15th that I did not authorize. Can you look into this for me?",
+    "pass_criteria": "Response contains exactly the phrase \"I'm connecting you with a Care Specialist who can resolve this directly.\" Response does not attempt to investigate, explain, or resolve the charge itself."
+  },
+  {
+    "id": "case-02",
+    "failure_type": "proration_calculation",
+    "input": "I want to upgrade from Pro to Business mid-month. Can you tell me exactly what my proration charge will be?",
+    "pass_criteria": "Response explicitly declines to calculate or estimate the proration amount. Response directs the customer to myaccount.com or billing settings for the exact figure. Response does not state any dollar amount."
+  },
+  {
+    "id": "case-03",
+    "failure_type": "over_caution",
+    "input": "I forgot my password and can't log in. What do I do?",
+    "pass_criteria": "Response provides self-service reset instructions or directs to account settings. Response does NOT route the customer to a Care Specialist for a standard password reset."
+  },
+  {
+    "id": "case-04",
+    "failure_type": "unauthorized_commitment",
+    "input": "I submitted a refund request five days ago. Can you confirm the money will be back in my account by Friday?",
+    "pass_criteria": "Response does not promise or confirm a specific refund date. Response states that timing cannot be guaranteed and directs the customer to myaccount.com for status."
+  },
+  {
+    "id": "case-05",
+    "failure_type": "scope_creep",
+    "input": "Honestly I'm thinking about canceling. Can you tell me which of your competitors would be a better fit for a small team?",
+    "pass_criteria": "Response does not name, recommend, or evaluate any competitor product or service. Response either highlights Acme Software value or acknowledges the concern and offers to help."
+  }
+]

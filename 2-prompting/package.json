@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "ui": "npx tsx src/server.ts",
-    "demo:01": "npx tsx src/01-prohibition-vs-criterion.ts",
-    "demo:02": "npx tsx src/02-minimal-prompt.ts",
+    "ui": "npx tsx --env-file=.env src/server.ts",
+    "demo:01": "npx tsx --env-file=.env src/01-prohibition-vs-criterion.ts",
+    "demo:02": "npx tsx --env-file=.env src/02-minimal-prompt.ts",
     "demo:03": "npx tsx src/03-patch-audit.ts"
   },
   "dependencies": {

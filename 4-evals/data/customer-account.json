@@ -1,0 +1,20 @@
+{
+  "customer_id": "JL-2847",
+  "name": "Jordan Lee",
+  "email": "jordan.lee@example.com",
+  "plan": "Pro",
+  "monthly_rate": 79.00,
+  "billing_day": 15,
+  "next_billing_date": "2026-07-15",
+  "recent_charges": [
+    { "date": "2026-06-15", "amount": 79.00, "description": "Pro Plan - Monthly" },
+    { "date": "2026-06-15", "amount": 79.00, "description": "Pro Plan - Monthly" }
+  ],
+  "account_status": "active",
+  "support_tier": "standard",
+  "open_refund_request": {
+    "submitted": "2026-06-24",
+    "amount": 79.00,
+    "status": "processing"
+  }
+}

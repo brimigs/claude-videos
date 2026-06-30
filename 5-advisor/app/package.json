@@ -1,0 +1,10 @@
+{
+  "name": "supporthub-frontend",
+  "version": "0.4.2",
+  "private": true,
+  "description": "SupportHub agent console — ticket queue, ticket detail, customer panel. Demo fixture for the worktree/batch parallel-work walkthrough; not wired up to run.",
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  }
+}

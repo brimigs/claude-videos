@@ -1,0 +1,17 @@
+{
+  "name": "evals-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "demo:01": "npx tsx --env-file=.env src/01-run-evals.ts",
+    "demo:02": "npx tsx --env-file=.env src/02-repair-loop.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.39.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

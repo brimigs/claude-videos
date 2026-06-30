@@ -1,0 +1,25 @@
+{
+  "customer_id": "JL-2847",
+  "name": "Jordan Lee",
+  "email": "jordan.lee@example.com",
+  "plan": "Pro",
+  "monthly_rate": 79.00,
+  "billing_day": 15,
+  "next_billing_date": "2026-07-15",
+  "recent_charges": [
+    { "date": "2026-06-15", "amount": 79.00, "description": "Pro Plan - Monthly" },
+    { "date": "2026-06-15", "amount": 79.00, "description": "Pro Plan - Monthly" }
+  ],
+  "account_status": "active",
+  "support_tier": "standard",
+  "contract": {
+    "type": "annual",
+    "start_date": "2026-01-15",
+    "term_months": 12,
+    "early_cancellation_fee": 199.00
+  },
+  "incident_history": [
+    { "date": "2026-05-02", "duration_minutes": 45, "description": "Regional outage — API returned 5xx for all Pro-tier accounts" },
+    { "date": "2026-06-10", "duration_minutes": 20, "description": "Elevated dashboard latency, no data loss" }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "name": "x402-solana-demo",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "setup": "npx tsx --env-file=.env src/setup-wallets.ts",
+    "server": "npx tsx --env-file=.env src/server.ts",
+    "agent": "npx tsx --env-file=.env src/agent.ts",
+    "balances": "npx tsx --env-file=.env src/balances.ts",
+    "demo:replay": "npx tsx --env-file=.env src/demo-replay-protection.ts"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.4",
+    "@solana/spl-token": "^0.4.14"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}

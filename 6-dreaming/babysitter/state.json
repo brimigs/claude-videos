@@ -1,0 +1,23 @@
+{
+  "last_run_at": "2026-06-29T03:00:40Z",
+  "last_checked_commit": "a1b2c3d",
+  "recently_fixed": [
+    {
+      "pr": 211,
+      "branch": "feat-payments",
+      "summary": "Fixed CI — missing await in the invoice generation test"
+    },
+    {
+      "pr": 212,
+      "branch": "bugfix-auth",
+      "summary": "Addressed 3 review comments on the session-expiry fix"
+    }
+  ],
+  "open_decisions": [
+    {
+      "pr": 214,
+      "branch": "refactor-api",
+      "summary": "Architecture decision needed: rounding behavior for calculateProration changes the function's public return shape"
+    }
+  ]
+}
