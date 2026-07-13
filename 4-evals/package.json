@@ -7,7 +7,7 @@
     "demo:02": "npx tsx --env-file=.env src/02-repair-loop.ts"
   },
   "dependencies": {
-    "@anthropic-ai/sdk": "^0.39.0"
+    "@anthropic-ai/sdk": "^0.110.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

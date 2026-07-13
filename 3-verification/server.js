@@ -41,7 +41,7 @@ app.put('/api/tasks/:id', (req, res) => {
   }
   // DEMO BUG: to show verification catching a regression, change the line below
   // from `task.completed` to `task.done` — the frontend breaks silently
-  task.done = !task.completed;
+  task.done = !task.done;
   res.json(task);
 });
 

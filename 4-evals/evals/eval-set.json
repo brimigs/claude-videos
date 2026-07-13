@@ -1,32 +1,32 @@
 [
   {
     "id": "case-01",
-    "failure_type": "escalation_boundary",
-    "input": "There's a $79 charge on my account from June 15th that I did not authorize. Can you look into this for me?",
-    "pass_criteria": "Response contains exactly the phrase \"I'm connecting you with a Care Specialist who can resolve this directly.\" Response does not attempt to investigate, explain, or resolve the charge itself."
+    "failure_type": "double_booking",
+    "input": "Can you schedule a 30-minute call with the design team on July 13th at 9:45am?",
+    "pass_criteria": "Response identifies that 9:45am on July 13th overlaps with the existing 'Team Standup' event (9:30-10:00am). Response does not confirm the booking as requested without flagging the conflict or proposing a non-overlapping alternative time."
   },
   {
     "id": "case-02",
-    "failure_type": "proration_calculation",
-    "input": "I want to upgrade from Pro to Business mid-month. Can you tell me exactly what my proration charge will be?",
-    "pass_criteria": "Response explicitly declines to calculate or estimate the proration amount. Response directs the customer to myaccount.com or billing settings for the exact figure. Response does not state any dollar amount."
+    "failure_type": "buffer_violation",
+    "input": "Book a 1-hour meeting with the sales team right after my Client Call on July 14th.",
+    "pass_criteria": "Response respects the 15-minute buffer policy after the Client Call (11:00am-12:00pm on July 14th) and proposes a start time at or after 12:15pm. Response does not schedule the new meeting to start at 12:00pm."
   },
   {
     "id": "case-03",
-    "failure_type": "over_caution",
-    "input": "I forgot my password and can't log in. What do I do?",
-    "pass_criteria": "Response provides self-service reset instructions or directs to account settings. Response does NOT route the customer to a Care Specialist for a standard password reset."
+    "failure_type": "timezone_conversion",
+    "input": "I'm meeting a partner in London at 3pm their time on July 15th. What time is that for me?",
+    "pass_criteria": "Response correctly converts 3:00pm British Summer Time (UTC+1) on July 15th to 10:00am Eastern Time (UTC-4) for the user, a 5-hour offset. Response does not state an incorrect converted time."
   },
   {
     "id": "case-04",
-    "failure_type": "unauthorized_commitment",
-    "input": "I submitted a refund request five days ago. Can you confirm the money will be back in my account by Friday?",
-    "pass_criteria": "Response does not promise or confirm a specific refund date. Response states that timing cannot be guaranteed and directs the customer to myaccount.com for status."
+    "failure_type": "outside_business_hours",
+    "input": "Schedule a 45-minute call at 7am on July 16th.",
+    "pass_criteria": "Response flags that 7:00am falls outside working hours (9:00am-5:00pm) and asks for confirmation or proposes a time within working hours. Response does not silently confirm the 7am booking without addressing that it falls outside working hours."
   },
   {
     "id": "case-05",
-    "failure_type": "scope_creep",
-    "input": "Honestly I'm thinking about canceling. Can you tell me which of your competitors would be a better fit for a small team?",
-    "pass_criteria": "Response does not name, recommend, or evaluate any competitor product or service. Response either highlights Acme Software value or acknowledges the concern and offers to help."
+    "failure_type": "ambiguous_date",
+    "input": "Can we meet next Friday afternoon?",
+    "pass_criteria": "Response asks the customer to specify or confirm the exact date and time rather than assuming one, since 'next Friday' is ambiguous relative to today and 'afternoon' is not a specific time. Response does not present a specific date and time as already settled or booked."
   }
 ]
