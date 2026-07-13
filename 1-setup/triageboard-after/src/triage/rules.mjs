@@ -1,8 +1,19 @@
 const IMPACT_WEIGHTS = Object.freeze({
   outage: 90,
+  partial_outage: 40,
   degraded: 46,
   limited: 24,
   internal: 8,
+});
+
+const SCORE_WEIGHTS = Object.freeze({
+  pointsPerReport: 2,
+  maxCountedReports: 60,
+  dollarsPerRevenuePoint: 5000,
+  maxRevenueScore: 30,
+  minutesPerAgePoint: 45,
+  maxAgeScore: 20,
+  activeStatusBonus: 8,
 });
 
 const SLA_TARGETS_MINUTES = Object.freeze({
@@ -26,10 +37,21 @@ const SLA_RANK = Object.freeze({
  */
 export function calculateIncidentScore(incident) {
   const impactScore = IMPACT_WEIGHTS[incident.customerImpact] ?? 0;
-  const reportScore = Math.min(Number(incident.reports) || 0, 60) * 2;
-  const revenueScore = Math.min(Math.ceil((Number(incident.revenueAtRisk) || 0) / 5000), 30);
-  const ageScore = Math.min(Math.floor((Number(incident.minutesOpen) || 0) / 45), 20);
-  const activeStatusBonus = incident.status === 'active' ? 8 : 0;
+
+  const reportScore =
+    Math.min(Number(incident.reports) || 0, SCORE_WEIGHTS.maxCountedReports) * SCORE_WEIGHTS.pointsPerReport;
+
+  const revenueScore = Math.min(
+    Math.ceil((Number(incident.revenueAtRisk) || 0) / SCORE_WEIGHTS.dollarsPerRevenuePoint),
+    SCORE_WEIGHTS.maxRevenueScore,
+  );
+
+  const ageScore = Math.min(
+    Math.floor((Number(incident.minutesOpen) || 0) / SCORE_WEIGHTS.minutesPerAgePoint),
+    SCORE_WEIGHTS.maxAgeScore,
+  );
+
+  const activeStatusBonus = incident.status === 'active' ? SCORE_WEIGHTS.activeStatusBonus : 0;
 
   return impactScore + reportScore + revenueScore + ageScore + activeStatusBonus;
 }

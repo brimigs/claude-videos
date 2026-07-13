@@ -1,8 +1,18 @@
-const IMPACT_WEIGHTS = Object.freeze({
-  outage: 90,
-  degraded: 46,
-  limited: 24,
-  internal: 8,
+const SCORE_WEIGHTS = Object.freeze({
+  impact: Object.freeze({
+    outage: 90,
+    partial_outage: 40,
+    degraded: 46,
+    limited: 24,
+    internal: 8,
+  }),
+  reportsPerUnit: 2,
+  reportsCap: 60,
+  revenueDollarsPerUnit: 5000,
+  revenueCap: 30,
+  ageMinutesPerUnit: 45,
+  ageCap: 20,
+  activeStatusBonus: 8,
 });
 
 const SLA_TARGETS_MINUTES = Object.freeze({
@@ -25,11 +35,18 @@ const SLA_RANK = Object.freeze({
  * @returns {number} Priority score where higher means more urgent.
  */
 export function calculateIncidentScore(incident) {
-  const impactScore = IMPACT_WEIGHTS[incident.customerImpact] ?? 0;
-  const reportScore = Math.min(Number(incident.reports) || 0, 60) * 2;
-  const revenueScore = Math.min(Math.ceil((Number(incident.revenueAtRisk) || 0) / 5000), 30);
-  const ageScore = Math.min(Math.floor((Number(incident.minutesOpen) || 0) / 45), 20);
-  const activeStatusBonus = incident.status === 'active' ? 8 : 0;
+  const impactScore = SCORE_WEIGHTS.impact[incident.customerImpact] ?? 0;
+  const reportScore =
+    Math.min(Number(incident.reports) || 0, SCORE_WEIGHTS.reportsCap) * SCORE_WEIGHTS.reportsPerUnit;
+  const revenueScore = Math.min(
+    Math.ceil((Number(incident.revenueAtRisk) || 0) / SCORE_WEIGHTS.revenueDollarsPerUnit),
+    SCORE_WEIGHTS.revenueCap,
+  );
+  const ageScore = Math.min(
+    Math.floor((Number(incident.minutesOpen) || 0) / SCORE_WEIGHTS.ageMinutesPerUnit),
+    SCORE_WEIGHTS.ageCap,
+  );
+  const activeStatusBonus = incident.status === 'active' ? SCORE_WEIGHTS.activeStatusBonus : 0;
 
   return impactScore + reportScore + revenueScore + ageScore + activeStatusBonus;
 }

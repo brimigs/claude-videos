@@ -29,6 +29,8 @@ Use this repo to demonstrate Claude Code setup: project memory, commands, skills
 ## Known Gotchas
 
 - `customerImpact: "outage"` must always produce `SEV1`, even with low report counts.
+- `customerImpact: "partial_outage"` must never be classified below `SEV2`, even with low reports/revenue/age — but unlike a full outage, it is a floor, not a fixed value, so it must still be able to escalate to `SEV1` when the score is high enough.
+- Partial outages are systematically under-reported relative to their real blast radius (fewer customers notice/report a regional issue than a full outage of the same severity), so `partial_outage` escalates to `SEV1` at a lower score threshold than every other impact type: **90**, not the standard 110. This threshold isn't derivable from the scoring formula — it's a deliberate compensation for under-reporting, so don't reuse the generic 110 cutoff for `partial_outage`.
 - The queue sort is domain-specific: severity score first, then SLA state, then revenue at risk.
 - Browser code should stay in `src/public/app.mjs`; domain logic belongs in `src/triage/rules.mjs`.
 - The dev server uses built-in Node APIs, so API routes live in `src/server.mjs`.
