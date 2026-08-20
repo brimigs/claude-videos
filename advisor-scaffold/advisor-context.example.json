@@ -1,0 +1,38 @@
+{
+  "project": {
+    "name": "Your project name",
+    "type": "e.g. Next.js SaaS app, Rust CLI, Python data pipeline",
+    "purpose": "One sentence: what this codebase does and who uses it."
+  },
+  "stack": {
+    "runtime": "e.g. Node.js 22",
+    "frameworks": "e.g. React 18, Express, Prisma",
+    "tests": "How changes are verified here — test runner, CI, or manual steps."
+  },
+  "codebase_map": [
+    {
+      "path": "src/example/module.ts",
+      "responsibility": "One line: what this file owns.",
+      "known_issue": "Optional: a known bug, debt, or migration target."
+    }
+  ],
+  "engineering_standards": [
+    "Keep behavior-compatible public interfaces unless a breaking change is explicitly approved.",
+    "Prefer small, reviewable commits with tests around changed behavior.",
+    "Do not mix broad mechanical migrations with semantic behavior changes without an approved rollout plan.",
+    "Name the verification you would run; never claim a verification passed unless it actually ran."
+  ],
+  "direct_work_examples": [
+    "Localized bug fix with a clear root cause and obvious verification.",
+    "Adding a missing guard or error path inside one module.",
+    "Refactoring one file without changing its public contract.",
+    "Writing focused tests for known behavior."
+  ],
+  "advisor_work_examples": [
+    "Changing a public API used by multiple modules.",
+    "Choosing between compatibility wrappers, full rewrites, or staged migrations.",
+    "Combining a behavior change with a broad mechanical refactor.",
+    "Security-sensitive auth/session behavior or anything that moves money.",
+    "Any migration where rollback, compatibility, or test strategy is unclear."
+  ]
+}

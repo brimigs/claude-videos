@@ -1,0 +1,19 @@
+{
+  "models": {
+    "executor": "claude-sonnet-5",
+    "advisor": "claude-opus-5",
+    "evaluator": "claude-haiku-4-5",
+    "repairer": "claude-sonnet-5"
+  },
+  "maxTokens": {
+    "executor": 2048,
+    "advisor": 4096,
+    "evaluator": 1024,
+    "repairer": 2048
+  },
+  "advisorEffort": "high",
+  "advisorFallbackModel": "claude-opus-4-8",
+  "contextFile": "advisor-context.json",
+  "promptsDir": "prompts",
+  "defaultPassCriteria": "The output names the specific files or modules involved. It gives a concrete, ordered sequence of changes and at least one verification step. It does not claim to have edited files or run anything. It does not mention internal roles such as 'advisor', 'escalated', 'evaluator', or 'repairer'."
+}

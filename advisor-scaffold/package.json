@@ -1,0 +1,18 @@
+{
+  "name": "advisor-pipeline",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "Drop-in advisor-strategy pipeline: a mid-tier executor handles routine engineering tasks, a stronger advisor is consulted only on genuinely hard decisions, a cheap evaluator verifies every output, and a repairer fixes only what the evaluator flags.",
+  "scripts": {
+    "typecheck": "tsc --noEmit",
+    "advisor": "tsx src/cli.ts"
+  },
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.108.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "^5.7.0"
+  }
+}
