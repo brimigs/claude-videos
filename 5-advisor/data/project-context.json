@@ -1,0 +1,55 @@
+{
+  "project": {
+    "name": "SupportHub Agent Console",
+    "type": "legacy React and Node frontend fixture",
+    "purpose": "Internal support console used by agents to read tickets, inspect customer accounts, and issue billing actions."
+  },
+  "stack": {
+    "runtime": "Node.js",
+    "frontend": "React 18",
+    "module_style": "CommonJS for app utilities, ES modules for React components",
+    "tests": "No test runner is wired in the fixture; verify with targeted unit tests when adding one, otherwise describe manual verification."
+  },
+  "codebase_map": [
+    {
+      "path": "app/src/auth/session.js",
+      "responsibility": "Creates and refreshes support-agent sessions.",
+      "known_issue": "expiresAt is stored in epoch seconds, but isExpired compares it to Date.now() in milliseconds."
+    },
+    {
+      "path": "app/src/api/supportClient.js",
+      "responsibility": "Callback-style HTTPS client for account and refund calls.",
+      "known_issue": "Hard to compose with modern async React code; has duplicated JSON parsing and weak HTTP-status handling."
+    },
+    {
+      "path": "app/src/payments/invoices.js",
+      "responsibility": "Invoice creation and plan-change billing.",
+      "known_issue": "calculateProration is a stub."
+    },
+    {
+      "path": "app/src/components/*.jsx",
+      "responsibility": "Ticket queue, ticket detail, and customer side panel.",
+      "known_issue": "React class components should eventually migrate to hooks."
+    }
+  ],
+  "engineering_standards": [
+    "Keep behavior-compatible public interfaces unless the task explicitly approves a breaking change.",
+    "Prefer small, reviewable commits with tests around changed behavior.",
+    "Do not mix broad mechanical migrations with semantic behavior changes unless a senior engineering decision explicitly approves the rollout plan.",
+    "For legacy modules, preserve the existing module system unless the migration plan includes all callers and build tooling.",
+    "Name the verification you would run; do not claim a verification passed unless it actually ran."
+  ],
+  "direct_work_examples": [
+    "Localized bug fix with a clear root cause and obvious verification.",
+    "Adding a missing guard or error path inside one module.",
+    "Refactoring one file without changing its public contract.",
+    "Writing focused tests for known behavior."
+  ],
+  "advisor_work_examples": [
+    "Changing a public API used by multiple modules.",
+    "Choosing between compatibility wrappers, full rewrites, or staged migrations.",
+    "Combining a behavior change with a broad mechanical refactor.",
+    "Security-sensitive auth/session behavior or billing-money movement.",
+    "Any migration where rollback, compatibility, or test strategy is unclear."
+  ]
+}

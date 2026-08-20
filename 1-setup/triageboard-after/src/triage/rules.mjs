@@ -1,6 +1,6 @@
 const IMPACT_WEIGHTS = Object.freeze({
   outage: 90,
-  partial_outage: 40,
+  partial_outage: 68,
   degraded: 46,
   limited: 24,
   internal: 8,
@@ -68,9 +68,15 @@ export function getSeverity(incident) {
   }
 
   const score = calculateIncidentScore(incident);
+  const isPartialOutage = incident.customerImpact === 'partial_outage';
+  const sev1Threshold = isPartialOutage ? 90 : 110;
 
-  if (score >= 110) {
+  if (score >= sev1Threshold) {
     return 'SEV1';
+  }
+
+  if (isPartialOutage) {
+    return 'SEV2';
   }
 
   if (score >= 56) {

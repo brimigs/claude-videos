@@ -4,16 +4,16 @@ import fs from "fs";
 const client = new Anthropic();
 const MODEL = "claude-sonnet-4-6";
 
-function buildSystem(accountData: object): string {
+function buildSystem(projectContext: object): string {
   const template = fs.readFileSync("prompts/executor.txt", "utf-8");
-  return template.replace("{{account_data}}", JSON.stringify(accountData, null, 2));
+  return template.replace("{{project_context}}", JSON.stringify(projectContext, null, 2));
 }
 
-export async function handle(input: string, accountData: object): Promise<string> {
+export async function handle(input: string, projectContext: object): Promise<string> {
   const response = await client.messages.create({
     model: MODEL,
     max_tokens: 512,
-    system: buildSystem(accountData),
+    system: buildSystem(projectContext),
     messages: [{ role: "user", content: input }],
   });
   return (response.content[0] as Anthropic.TextBlock).text;
@@ -26,20 +26,20 @@ export function parseEscalation(text: string): string | null {
 
 export async function finalize(
   input: string,
-  accountData: object,
+  projectContext: object,
   escalation: string,
   guidance: string
 ): Promise<string> {
   const response = await client.messages.create({
     model: MODEL,
     max_tokens: 512,
-    system: buildSystem(accountData),
+    system: buildSystem(projectContext),
     messages: [
       { role: "user", content: input },
       { role: "assistant", content: escalation },
       {
         role: "user",
-        content: `Advisor guidance: ${guidance}\n\nWrite the final customer-facing reply using this guidance.`,
+        content: `Senior engineering guidance: ${guidance}\n\nWrite the final engineering-facing output using this guidance.`,
       },
     ],
   });

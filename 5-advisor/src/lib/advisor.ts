@@ -9,9 +9,9 @@ export interface AdvisorResult {
   thinking: string;
 }
 
-export async function consult(question: string, accountData: object): Promise<AdvisorResult> {
+export async function consult(question: string, projectContext: object): Promise<AdvisorResult> {
   const template = fs.readFileSync("prompts/advisor.txt", "utf-8");
-  const system = template.replace("{{account_data}}", JSON.stringify(accountData, null, 2));
+  const system = template.replace("{{project_context}}", JSON.stringify(projectContext, null, 2));
 
   const response = await client.messages.create({
     model: MODEL,

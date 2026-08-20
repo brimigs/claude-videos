@@ -1,7 +1,7 @@
 const SCORE_WEIGHTS = Object.freeze({
   impact: Object.freeze({
     outage: 90,
-    partial_outage: 40,
+    partial_outage: 65,
     degraded: 46,
     limited: 24,
     internal: 8,

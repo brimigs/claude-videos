@@ -23,6 +23,30 @@ describe('triage rules', () => {
     assert.equal(severity, 'SEV1');
   });
 
+  it('should floor partial outages at SEV2 even with a low score', () => {
+    const severity = getSeverity({
+      customerImpact: 'partial_outage',
+      minutesOpen: 2,
+      reports: 1,
+      revenueAtRisk: 0,
+      status: 'watching',
+    });
+
+    assert.equal(severity, 'SEV2');
+  });
+
+  it('should escalate partial outages to SEV1 at the lowered threshold of 90', () => {
+    const severity = getSeverity({
+      customerImpact: 'partial_outage',
+      minutesOpen: 900,
+      reports: 60,
+      revenueAtRisk: 150000,
+      status: 'active',
+    });
+
+    assert.equal(severity, 'SEV1');
+  });
+
   it('should mark incidents as breached after the severity target', () => {
     const state = getSlaState({
       customerImpact: 'degraded',

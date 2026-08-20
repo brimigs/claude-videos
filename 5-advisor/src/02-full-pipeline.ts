@@ -13,24 +13,25 @@ const CYAN = "\x1b[36m";
 const MAGENTA = "\x1b[35m";
 const DIM = "\x1b[2m";
 
-const accountData = JSON.parse(fs.readFileSync("data/customer-account.json", "utf-8"));
+const projectContext = JSON.parse(fs.readFileSync("data/project-context.json", "utf-8"));
 
 const input =
-  "I've been charged twice this month, your service has gone down on me twice this " +
-  "quarter, and I want to cancel my contract today without the early termination fee " +
-  "— plus a credit for the downtime.";
+  "Modernize app/src/api/supportClient.js from callbacks to async/await and migrate " +
+  "the React ticket UI to hooks in the same change. Remove the callback API entirely " +
+  "and switch the client to fetch. What implementation approach should we take?";
 
 const passCriteria =
-  "Reply states the exact dollar amount of any fee waived or credit applied. Reply " +
-  "does not use internal terms like 'advisor', 'escalated', or 'policy team'. Reply " +
-  "acknowledges the service incidents before discussing the financial resolution.";
+  "Output names app/src/api/supportClient.js and the React component callers. Output " +
+  "states whether the callback API is preserved temporarily or removed in the same " +
+  "change. Output includes a staged sequence and a verification expectation. Output " +
+  "does not use internal terms like 'advisor', 'escalated', or 'policy team'.";
 
 console.log(`\n${BOLD}Four roles, one request${RESET}`);
 console.log("─".repeat(72));
-console.log(`${DIM}Customer:${RESET} ${input}\n`);
+console.log(`${DIM}Request:${RESET} ${input}\n`);
 
 console.log(`${CYAN}${BOLD}Executor (claude-sonnet-4-6)${RESET}`);
-const escalation = await handle(input, accountData);
+const escalation = await handle(input, projectContext);
 const question = parseEscalation(escalation);
 
 let finalReply: string;
@@ -40,13 +41,13 @@ if (!question) {
 } else {
   console.log(`${YELLOW}Escalated:${RESET} ${question}\n`);
   console.log(`${MAGENTA}${BOLD}Advisor (claude-opus-4-8, adaptive thinking)${RESET}`);
-  const { guidance } = await consult(question, accountData);
+  const { guidance } = await consult(question, projectContext);
   console.log(`${MAGENTA}Directive:${RESET} ${guidance}\n`);
 
   console.log(`${CYAN}${BOLD}Executor (claude-sonnet-4-6) — finalizing${RESET}`);
-  finalReply = await finalize(input, accountData, escalation, guidance);
+  finalReply = await finalize(input, projectContext, escalation, guidance);
 }
-console.log(`${GREEN}Reply:${RESET}\n${finalReply}\n`);
+console.log(`${GREEN}Executor output:${RESET}\n${finalReply}\n`);
 
 console.log(`${BOLD}Evaluator (claude-haiku-4-5-20251001)${RESET}`);
 const violations = await evaluate(input, finalReply, passCriteria);
@@ -58,8 +59,8 @@ if (violations.length === 0) {
   violations.forEach((v, i) => console.log(`  ${i + 1}. ${v}`));
 
   console.log(`\n${BOLD}Repairer (claude-sonnet-4-6) — fixing only what's flagged${RESET}`);
-  const repaired = await repair(input, finalReply, violations, accountData);
-  console.log(`${GREEN}Repaired reply:${RESET}\n${repaired}`);
+  const repaired = await repair(input, finalReply, violations, projectContext);
+  console.log(`${GREEN}Repaired output:${RESET}\n${repaired}`);
 }
 
 console.log(`\n${"─".repeat(72)}`);

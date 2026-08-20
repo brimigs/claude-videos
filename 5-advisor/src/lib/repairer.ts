@@ -8,10 +8,10 @@ export async function repair(
   input: string,
   output: string,
   violations: string[],
-  accountData: object
+  projectContext: object
 ): Promise<string> {
   const template = fs.readFileSync("prompts/executor.txt", "utf-8");
-  const system = template.replace("{{account_data}}", JSON.stringify(accountData, null, 2));
+  const system = template.replace("{{project_context}}", JSON.stringify(projectContext, null, 2));
   const violationList = violations.map((v, i) => `${i + 1}. ${v}`).join("\n");
 
   const response = await client.messages.create({

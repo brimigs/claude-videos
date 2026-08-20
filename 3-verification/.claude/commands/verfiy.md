@@ -17,4 +17,7 @@ description: Verify changes work end-to-end after any code change. Use this aggr
 If any step fails: read the error, fix it, restart from step 1.
 If you hit a blocker: update the user and update this file.
 
+Update this file as you use it to accurately reflect any changes, delete old information and add new information that may be needed. 
+
 When done: `touch .claude/last-verified`
+

@@ -3,6 +3,7 @@ import { describe, it } from 'node:test';
 
 import { INCIDENTS } from '../src/data/incidents.mjs';
 import {
+  calculateIncidentScore,
   filterIncidents,
   getSeverity,
   getSlaState,
@@ -21,6 +22,29 @@ describe('triage rules', () => {
     });
 
     assert.equal(severity, 'SEV1');
+  });
+
+  it('should weight partial_outage between outage and degraded, not below degraded', () => {
+    const base = { minutesOpen: 30, reports: 5, revenueAtRisk: 10000, status: 'active' };
+
+    const outageScore = calculateIncidentScore({ ...base, customerImpact: 'outage' });
+    const partialOutageScore = calculateIncidentScore({ ...base, customerImpact: 'partial_outage' });
+    const degradedScore = calculateIncidentScore({ ...base, customerImpact: 'degraded' });
+
+    assert.equal(partialOutageScore < outageScore, true);
+    assert.equal(partialOutageScore > degradedScore, true);
+  });
+
+  it('should not force SEV1 for partial_outage without a high enough score', () => {
+    const severity = getSeverity({
+      customerImpact: 'partial_outage',
+      minutesOpen: 2,
+      reports: 1,
+      revenueAtRisk: 0,
+      status: 'watching',
+    });
+
+    assert.notEqual(severity, 'SEV1');
   });
 
   it('should mark incidents as breached after the severity target', () => {

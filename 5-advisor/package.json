@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "type": "module",
   "scripts": {
+    "typecheck": "tsc --noEmit",
     "demo:01": "npx tsx --env-file=.env src/01-advisor-pattern.ts",
     "demo:02": "npx tsx --env-file=.env src/02-full-pipeline.ts"
   },

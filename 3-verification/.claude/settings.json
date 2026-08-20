@@ -3,7 +3,10 @@
     "Stop": [
       {
         "hooks": [
-
+           {
+            "type": "command",
+            "command": "./scripts/check-verify.sh"
+          }
         ]
       }
     ]
