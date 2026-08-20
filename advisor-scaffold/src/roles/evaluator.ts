@@ -18,6 +18,7 @@ export async function evaluate(
     max_tokens: rt.config.maxTokens.evaluator,
     messages: [{ role: "user", content: prompt }],
   });
+  rt.tracker.record("evaluator", rt.config.models.evaluator, response.usage);
   assertNotRefusal(response, "Evaluator");
 
   const text = textOf(response.content);

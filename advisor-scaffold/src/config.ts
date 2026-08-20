@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { fileURLToPath } from "url";
 import type { AdvisorConfig, Runtime } from "./types.js";
+import { UsageTracker } from "./usage.js";
 
 const CONFIG_FILE = "advisor.config.json";
 
@@ -79,7 +80,14 @@ export function createRuntime(rootDir?: string): Runtime {
           "alone and be explicit about any assumptions you make about this codebase.",
       };
 
-  return { client: new Anthropic(), config, root, projectContext, contextFound };
+  return {
+    client: new Anthropic(),
+    config,
+    root,
+    projectContext,
+    contextFound,
+    tracker: new UsageTracker(),
+  };
 }
 
 type PromptName = "executor" | "advisor" | "evaluator";
@@ -95,9 +103,17 @@ export function loadPrompt(rt: Runtime, name: PromptName): string {
   return fs.readFileSync(promptPath, "utf-8");
 }
 
-export function buildRoleSystem(rt: Runtime, name: "executor" | "advisor"): string {
-  return loadPrompt(rt, name).replace(
+// The role prompt + project context are byte-identical across calls, so mark
+// them as a cache breakpoint: handle → finalize → repair (and repeat runs
+// within the cache TTL) read the prefix from cache instead of re-paying for it.
+// Prefixes under ~1024 tokens silently don't cache — harmless, just no hit.
+export function buildRoleSystem(
+  rt: Runtime,
+  name: "executor" | "advisor"
+): Anthropic.TextBlockParam[] {
+  const text = loadPrompt(rt, name).replace(
     "{{project_context}}",
     JSON.stringify(rt.projectContext, null, 2)
   );
+  return [{ type: "text", text, cache_control: { type: "ephemeral" } }];
 }

@@ -10,6 +10,7 @@ async function complete(rt: Runtime, messages: Anthropic.MessageParam[]): Promis
     system: buildRoleSystem(rt, "executor"),
     messages,
   });
+  rt.tracker.record("executor", rt.config.models.executor, response.usage);
   assertNotRefusal(response, "Executor");
   return textOf(response.content).trim();
 }

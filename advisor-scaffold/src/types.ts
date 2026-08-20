@@ -1,4 +1,5 @@
 import type Anthropic from "@anthropic-ai/sdk";
+import type { ModelPricing, UsageSummary, UsageTracker } from "./usage.js";
 
 export interface RoleModels {
   executor: string;
@@ -22,6 +23,8 @@ export interface AdvisorConfig {
   contextFile: string;
   promptsDir: string;
   defaultPassCriteria: string;
+  /** Per-model USD/MTok price overrides for the cost summary (merged over built-in defaults). */
+  pricing?: Record<string, ModelPricing>;
 }
 
 export interface Runtime {
@@ -30,6 +33,9 @@ export interface Runtime {
   root: string;
   projectContext: object;
   contextFound: boolean;
+  // Accumulates response.usage across role calls. runAdvisorPipeline resets it
+  // at the start of each run, so one Runtime must not run pipelines concurrently.
+  tracker: UsageTracker;
 }
 
 export type PipelineEvent =
@@ -58,4 +64,5 @@ export interface PipelineResult {
   violations: string[];
   repaired: boolean;
   models: RoleModels;
+  usage: UsageSummary;
 }

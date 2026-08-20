@@ -1,0 +1,15 @@
+{
+  "model": "sonnet",
+  "effortLevel": "high",
+  "fastModePerSessionOptIn": true,
+  "autoCompactEnabled": true,
+  "precomputeCompactionEnabled": true,
+  "autoCompactWindow": 200000,
+  "permissions": {
+    "allow": [
+      "Bash(git status)",
+      "Bash(git diff *)",
+      "Bash(git log *)"
+    ]
+  }
+}

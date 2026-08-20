@@ -155,6 +155,25 @@ async function main(): Promise<void> {
   console.log(
     `  Repairer    ${models.repairer} — ${result.repaired ? "fixed flagged violations" : "not needed"}\n`
   );
+
+  const { usage } = result;
+  const dollars = (n: number | null): string => (n === null ? "n/a" : `$${n.toFixed(4)}`);
+  console.log(`${BOLD}Usage this run (estimated):${RESET}`);
+  for (const e of usage.entries) {
+    console.log(
+      `  ${e.role.padEnd(10)} ${e.model.padEnd(18)} ` +
+        `${String(e.calls).padStart(2)} call${e.calls === 1 ? " " : "s"}  ` +
+        `in ${String(e.inputTokens).padStart(6)}  out ${String(e.outputTokens).padStart(6)}  ` +
+        `cache-read ${String(e.cacheReadTokens).padStart(6)}  ${dollars(e.estimatedCostUSD)}`
+    );
+  }
+  console.log(`  ${BOLD}Total ≈ ${dollars(usage.estimatedCostUSD)}${RESET}`);
+  if (usage.allOnAdvisorCostUSD !== null && usage.savingsPercent !== null) {
+    console.log(
+      `  ${DIM}Same tokens all on ${models.advisor}: ~${dollars(usage.allOnAdvisorCostUSD)} ` +
+        `→ the routing rule saved ~${usage.savingsPercent.toFixed(0)}%${RESET}\n`
+    );
+  }
 }
 
 main().catch((error: unknown) => {

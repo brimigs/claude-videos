@@ -12,6 +12,7 @@ export async function runAdvisorPipeline(
 ): Promise<PipelineResult> {
   const rt = runtime ?? createRuntime();
   const emit = options.onEvent ?? (() => {});
+  rt.tracker.reset();
 
   emit({ type: "executor_start", model: rt.config.models.executor });
   const first = await handle(rt, task);
@@ -60,5 +61,6 @@ export async function runAdvisorPipeline(
     violations,
     repaired,
     models: rt.config.models,
+    usage: rt.tracker.summarize(rt.config.models.advisor, rt.config.pricing),
   };
 }

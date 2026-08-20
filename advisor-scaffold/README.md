@@ -66,11 +66,29 @@ escalation decisions will be generic.
 npm run advisor -- "<task>"                       # full pipeline
 npm run advisor -- "<task>" --no-verify           # skip evaluator + repairer
 npm run advisor -- "<task>" --criteria "<text>"   # custom pass criteria for this run
-npm run advisor -- "<task>" --json                # structured JSON result
+npm run --silent advisor -- "<task>" --json       # structured JSON result (--silent hides npm's banner)
 ```
 
 The CLI finds `advisor.config.json` by walking up from your current directory, so
 it works from anywhere inside the repo once the scaffold is installed.
+
+Every run ends with a usage table: per-role calls, tokens, cache reads, and an
+estimated cost — plus what the same token volume would have cost if every call had
+run on the advisor model. That last line is the advisor strategy's receipt.
+
+## Use it from Claude Code
+
+The scaffold ships a skill template in `claude-skill/advisor/`. Copy it into your
+repo's `.claude/skills/` directory (adjust the source path to wherever you
+installed the scaffold):
+
+```sh
+mkdir -p .claude/skills
+cp -r tools/advisor/claude-skill/advisor .claude/skills/advisor
+```
+
+Then `/advisor <task>` inside Claude Code runs the pipeline and reports the
+result, escalation status, and cost.
 
 ## Library
 
@@ -92,6 +110,7 @@ result.escalationQuestion; // the one-sentence question it asked
 result.guidance;           // the advisor's directive
 result.violations;         // what the evaluator flagged
 result.repaired;           // did the repairer run?
+result.usage;              // per-role tokens + estimated cost + all-on-advisor comparison
 ```
 
 ## Configuration (`advisor.config.json`)
@@ -108,6 +127,7 @@ result.repaired;           // did the repairer run?
 | `contextFile` | `advisor-context.json` | Your repo description, relative to the config file |
 | `promptsDir` | `prompts` | Role prompt templates (edit these to change the escalation policy) |
 | `defaultPassCriteria` | see file | What the evaluator checks when no `--criteria` is given |
+| `pricing` | built-in table | Per-model `{ "input": $/MTok, "output": $/MTok }` overrides for the cost summary. Prices drift — update here when they do. |
 
 All keys are optional — missing ones fall back to the defaults above.
 
@@ -132,3 +152,12 @@ schemas, streaming, and compaction), but it's a real one: the expensive model on
 runs after the executor has identified a decision that is genuinely hard, so you
 pay Opus prices for judgment, not for typing. The evaluator is cheap enough to run
 on everything, which is what makes the executor's autonomy safe.
+
+The scaffold applies the first lever too: the role system prompts (prompt template
+plus your project context) are marked as prompt-cache breakpoints, so the executor's
+follow-up calls in the same run — and repeat runs within the cache TTL — read that
+prefix from cache at ~10% of input price. Watch the `cache-read` column in the
+usage table. One caveat: prefixes under ~1024 tokens silently don't cache, so with
+a tiny or missing context file the column stays at zero — expected, not a bug.
+Cost numbers are estimates from a built-in price table (see `pricing` above);
+authoritative pricing is your Console bill.

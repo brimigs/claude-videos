@@ -25,6 +25,7 @@ export async function repair(
       },
     ],
   });
+  rt.tracker.record("repairer", rt.config.models.repairer, response.usage);
   assertNotRefusal(response, "Repairer");
   return textOf(response.content).trim();
 }

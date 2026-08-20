@@ -30,6 +30,7 @@ export async function consult(rt: Runtime, question: string): Promise<AdvisorRes
       })
     : await rt.client.messages.create(request);
 
+  rt.tracker.record("advisor", config.models.advisor, response.usage);
   assertNotRefusal(response, "Advisor");
   return {
     guidance: textOf(response.content).trim(),

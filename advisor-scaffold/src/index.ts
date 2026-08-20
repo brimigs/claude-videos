@@ -12,3 +12,5 @@ export type {
   RoleModels,
   Runtime,
 } from "./types.js";
+export { UsageTracker, DEFAULT_PRICING } from "./usage.js";
+export type { ModelPricing, UsageEntry, UsageSummary } from "./usage.js";
